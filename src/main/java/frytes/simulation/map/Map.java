@@ -1,9 +1,9 @@
-package Frytes.simulation.map;
+package frytes.simulation.map;
 
-import Frytes.simulation.entity.Coordinates;
-import Frytes.simulation.entity.EmptyCell;
-import Frytes.simulation.entity.Entity;
-import Frytes.simulation.entity.immobile.BorderCell;
+import frytes.simulation.entity.Coordinates;
+import frytes.simulation.entity.EmptyCell;
+import frytes.simulation.entity.Entity;
+import frytes.simulation.entity.immobile.BorderCell;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static Frytes.simulation.Simulation.MAP_HEIGHT;
-import static Frytes.simulation.Simulation.MAP_WIDTH;
+import static frytes.simulation.Simulation.MAP_HEIGHT;
+import static frytes.simulation.Simulation.MAP_WIDTH;
 
 
 public class Map {

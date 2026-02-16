@@ -1,4 +1,4 @@
-package Frytes.simulation.action;
+package frytes.simulation.action;
 
 public interface Damageable {
 

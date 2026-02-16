@@ -1,11 +1,11 @@
-package Frytes.simulation.action;
+package frytes.simulation.action;
 
-import Frytes.simulation.entity.immobile.Carrot;
-import Frytes.simulation.entity.immobile.House;
-import Frytes.simulation.entity.immobile.Tree;
-import Frytes.simulation.map.Map;
+import frytes.simulation.entity.immobile.Carrot;
+import frytes.simulation.entity.immobile.House;
+import frytes.simulation.entity.immobile.Tree;
+import frytes.simulation.map.Map;
 
-import static Frytes.simulation.Simulation.*;
+import static frytes.simulation.Simulation.*;
 
 public class InitActions extends Actions {
 

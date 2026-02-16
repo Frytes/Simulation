@@ -1,16 +1,16 @@
-package Frytes.simulation.map;
+package frytes.simulation.map;
 
-import Frytes.simulation.entity.Coordinates;
-import Frytes.simulation.entity.Entity;
-import Frytes.simulation.entity.immobile.Carrot;
-import Frytes.simulation.entity.mobile.Herbivore;
-import Frytes.simulation.entity.mobile.Predator;
-import Frytes.simulation.entity.immobile.House;
-import Frytes.simulation.entity.immobile.Tree;
+import frytes.simulation.entity.Coordinates;
+import frytes.simulation.entity.Entity;
+import frytes.simulation.entity.immobile.Carrot;
+import frytes.simulation.entity.mobile.Herbivore;
+import frytes.simulation.entity.mobile.Predator;
+import frytes.simulation.entity.immobile.House;
+import frytes.simulation.entity.immobile.Tree;
 
 import java.util.HashMap;
 
-import static Frytes.simulation.Simulation.*;
+import static frytes.simulation.Simulation.*;
 
 public class RenderMap {
 

@@ -1,7 +1,7 @@
-package Frytes.simulation.entity.immobile;
+package frytes.simulation.entity.immobile;
 
-import Frytes.simulation.entity.Coordinates;
-import Frytes.simulation.entity.Entity;
+import frytes.simulation.entity.Coordinates;
+import frytes.simulation.entity.Entity;
 
 public class BorderCell extends Entity {
 

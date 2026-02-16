@@ -1,4 +1,4 @@
-package Frytes.simulation.entity;
+package frytes.simulation.entity;
 
 public class EmptyCell extends Entity{
 

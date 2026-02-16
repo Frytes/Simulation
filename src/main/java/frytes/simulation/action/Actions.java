@@ -1,10 +1,10 @@
-package Frytes.simulation.action;
+package frytes.simulation.action;
 
-import Frytes.simulation.entity.Coordinates;
-import Frytes.simulation.entity.Entity;
-import Frytes.simulation.entity.mobile.Herbivore;
-import Frytes.simulation.entity.mobile.Predator;
-import Frytes.simulation.map.Map;
+import frytes.simulation.entity.Coordinates;
+import frytes.simulation.entity.Entity;
+import frytes.simulation.entity.mobile.Herbivore;
+import frytes.simulation.entity.mobile.Predator;
+import frytes.simulation.map.Map;
 
 public abstract class Actions {
     protected final Map map;

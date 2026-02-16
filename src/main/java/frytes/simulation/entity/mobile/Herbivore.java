@@ -1,8 +1,8 @@
-package Frytes.simulation.entity.mobile;
+package frytes.simulation.entity.mobile;
 
-import Frytes.simulation.entity.Coordinates;
-import Frytes.simulation.entity.Entity;
-import Frytes.simulation.entity.immobile.Carrot;
+import frytes.simulation.entity.Coordinates;
+import frytes.simulation.entity.Entity;
+import frytes.simulation.entity.immobile.Carrot;
 
 public class Herbivore extends Creature {
 

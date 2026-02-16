@@ -1,4 +1,4 @@
-package Frytes.simulation.entity;
+package frytes.simulation.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

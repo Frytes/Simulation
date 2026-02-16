@@ -1,14 +1,14 @@
-package Frytes.simulation.action;
+package frytes.simulation.action;
 
-import Frytes.simulation.entity.immobile.Carrot;
-import Frytes.simulation.entity.mobile.Herbivore;
-import Frytes.simulation.entity.mobile.Predator;
-import Frytes.simulation.map.Map;
+import frytes.simulation.entity.immobile.Carrot;
+import frytes.simulation.entity.mobile.Herbivore;
+import frytes.simulation.entity.mobile.Predator;
+import frytes.simulation.map.Map;
 
 import java.util.List;
 
-import static Frytes.simulation.Simulation.COUNT_CARROT;
-import static Frytes.simulation.Simulation.MIN_COUNT_CARROT;
+import static frytes.simulation.Simulation.COUNT_CARROT;
+import static frytes.simulation.Simulation.MIN_COUNT_CARROT;
 
 public class TurnActions extends Actions {
 

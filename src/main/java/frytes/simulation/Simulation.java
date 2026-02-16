@@ -1,10 +1,10 @@
-package Frytes.simulation;
+package frytes.simulation;
 
-import Frytes.simulation.action.Actions;
-import Frytes.simulation.action.InitActions;
-import Frytes.simulation.action.TurnActions;
-import Frytes.simulation.map.Map;
-import Frytes.simulation.map.RenderMap;
+import frytes.simulation.action.Actions;
+import frytes.simulation.action.InitActions;
+import frytes.simulation.action.TurnActions;
+import frytes.simulation.map.Map;
+import frytes.simulation.map.RenderMap;
 
 public class Simulation {
     private final Map map;

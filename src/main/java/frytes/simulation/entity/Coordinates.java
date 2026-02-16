@@ -1,9 +1,9 @@
-package Frytes.simulation.entity;
+package frytes.simulation.entity;
 
 import java.util.Random;
 
-import static Frytes.simulation.Simulation.MAP_HEIGHT;
-import static Frytes.simulation.Simulation.MAP_WIDTH;
+import static frytes.simulation.Simulation.MAP_HEIGHT;
+import static frytes.simulation.Simulation.MAP_WIDTH;
 
 
 public record Coordinates(int x, int y) {
