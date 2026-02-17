@@ -58,11 +58,12 @@ public abstract class Creature extends Entity implements Damageable {
 
         for (int i = 0; i < path.size() && i < moveSpeed; i++) {
             Coordinates nextStep = path.get(i);
-            Entity entityOnNextStep = map.getEntity(nextStep);
+
             if (map.isEmpty(nextStep)) {
                 map.moveEntity(nextStep, this);
             }
             else {
+                Entity entityOnNextStep = map.getEntity(nextStep);
                 if (interact(entityOnNextStep, map)) {
                     map.moveEntity(nextStep, this);
                 } else {

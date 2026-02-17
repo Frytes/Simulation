@@ -25,12 +25,25 @@ public class PathFinder {
                 break;
             }
 
-            List<Entity> neighbors = map.getEntitiesNearOrNull(current);
+            int x = current.x();
+            int y = current.y();
 
-            for (Entity neighbor : neighbors) {
-                Coordinates neighborCoord = neighbor.getCoordinates();
-                boolean isWalkable = map.isEmpty(neighborCoord) || targetType.isInstance(neighbor);
+            List<Coordinates> potentialNeighbors = List.of(
+                    new Coordinates(x - 1, y),
+                    new Coordinates(x + 1, y),
+                    new Coordinates(x, y - 1),
+                    new Coordinates(x, y + 1)
+            );
+
+            for (Coordinates neighborCoord : potentialNeighbors) {
+                if (!Map.isValidCoordinates(neighborCoord)) continue;
+
+                Entity neighborEntity = map.getEntity(neighborCoord);
+
+                boolean isWalkable = (neighborEntity == null) || targetType.isInstance(neighborEntity);
+
                 if (!isWalkable) continue;
+
                 int newCost = gCost.get(current) + 1;
 
                 if (!gCost.containsKey(neighborCoord) || newCost < gCost.get(neighborCoord)) {

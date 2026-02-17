@@ -1,12 +1,8 @@
 package frytes.simulation.map;
 
 import frytes.simulation.entity.Coordinates;
-import frytes.simulation.entity.EmptyCell;
 import frytes.simulation.entity.Entity;
-import frytes.simulation.entity.immobile.BorderCell;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +19,8 @@ public class Map {
         if (!isValidCoordinates(coordinates)) {
             return false;
         }
-        Entity entity = worldMap.get(coordinates);
-        return entity == null || entity instanceof EmptyCell;
+        return !worldMap.containsKey(coordinates);
+
     }
 
     public void setEntity(Coordinates coordinates, Entity entity) {
@@ -37,30 +33,8 @@ public class Map {
     }
 
     public Entity getEntity(Coordinates coordinates) {
-        return worldMap.getOrDefault(coordinates, new EmptyCell(coordinates));
+        return worldMap.get(coordinates);
     }
-
-    public List<Entity> getEntitiesNearOrNull(Coordinates coords) {
-        List<Entity> entities = new ArrayList<>();
-        int x = coords.x();
-        int y = coords.y();
-        List <Coordinates> coordinates = Arrays.asList(
-                new Coordinates(x - 1, y),     // лево
-                new Coordinates(x, y + 1),     // верх
-                new Coordinates(x + 1, y),     // право
-                new Coordinates(x, y - 1)      // низ
-        );
-
-        for (Coordinates c : coordinates){
-            if (isValidCoordinates(c)) {
-                entities.add(getEntity(c));
-            } else {
-                entities.add(new BorderCell(c));
-            }
-        }
-        return entities;
-    }
-
 
     public static boolean isValidCoordinates(Coordinates coordinates) {
         return coordinates.x() >= 0
