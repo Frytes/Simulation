@@ -1,26 +1,28 @@
-package frytes.simulation.map;
+package frytes.simulation.gamemap;
 
 import frytes.simulation.entity.Coordinates;
 import frytes.simulation.entity.Entity;
 import frytes.simulation.entity.immobile.Carrot;
-import frytes.simulation.entity.mobile.Herbivore;
-import frytes.simulation.entity.mobile.Predator;
 import frytes.simulation.entity.immobile.House;
 import frytes.simulation.entity.immobile.Tree;
+import frytes.simulation.entity.mobile.Herbivore;
+import frytes.simulation.entity.mobile.Predator;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import static frytes.simulation.Simulation.*;
+import static frytes.simulation.Simulation.MAP_HEIGHT;
+import static frytes.simulation.Simulation.MAP_WIDTH;
 
-public class RenderMap {
+public class GameMapRenderer {
 
     public static final String RESET = "\u001B[0m";
     public static final String BG_GRAY = "\u001B[47m";
     public static final String BG_GREEN = "\u001B[42m";
     public static final String BG_EARTH = "\u001B[48;5;94m";
-    HashMap<Class<?>, String> spritesMap = new HashMap<>();
+    Map<Class<?>, String> spritesMap = new HashMap<>();
 
-    public RenderMap() {
+    public GameMapRenderer() {
         spritesMap.put(Carrot.class," 🥕 " );
         spritesMap.put(House.class," 🏚️ ");
         spritesMap.put(Tree.class," 🌳 ");
@@ -29,9 +31,9 @@ public class RenderMap {
 
     }
 
-    public void renderMap(Map map){
+    public void renderMap(GameMap gameMap) {
         StringBuilder line = new StringBuilder();
-        java.util.Map<Coordinates, Entity> worldMap = map.getEntities();
+        java.util.Map<Coordinates, Entity> worldMap = gameMap.getEntities();
         for(int y = 0; y < MAP_HEIGHT; y++) {
             for(int x = 0; x < MAP_WIDTH; x++) {
                 Coordinates coordinates = new Coordinates(x,y);
@@ -39,7 +41,9 @@ public class RenderMap {
                     Entity entity = worldMap.get(coordinates);
                     String background = getBackgroundColor(entity);
                     String sprite = spritesMap.get(entity.getClass());
-                    if (sprite == null) sprite = " ❓ ";
+                    if (sprite == null) {
+                        throw new IllegalArgumentException("Спрайт не найден для сущности: " + entity.getClass().getSimpleName());
+                    }
                     line.append(colorizeSprites(background,sprite));
                 }else {
                     line.append(defaultColorizeSprites());
@@ -64,8 +68,6 @@ public class RenderMap {
                 .append(RESET)
                 .toString();
     }
-
-
 
     private String getBackgroundColor(Entity entity){
         String background = BG_EARTH;

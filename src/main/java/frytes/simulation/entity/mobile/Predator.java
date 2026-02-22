@@ -1,31 +1,32 @@
 package frytes.simulation.entity.mobile;
 
+import frytes.simulation.action.Damageable;
 import frytes.simulation.entity.Coordinates;
 import frytes.simulation.entity.Entity;
+import frytes.simulation.gamemap.GameMap;
+import lombok.Getter;
 
+
+@Getter
 public class Predator extends Creature {
-    int attackDamage;
+    private static final int HEAL_AMOUNT = 10;
+    private final int attackDamage;
 
-    public Predator(Coordinates coordinates, int hp, int moveSpeed, int attackDamage) {
-        super(coordinates);
-        this.hp = hp;
-        this.moveSpeed = moveSpeed;
+    public Predator(Coordinates coordinates, int hp, int speed, int attackDamage) {
+        super(coordinates, hp, speed, Herbivore.class);
         this.attackDamage = attackDamage;
     }
 
-
     @Override
-    protected Class<? extends Entity> getTargetType() {
-        return Herbivore.class;
-    }
-
-    @Override
-    protected int getAttackDamage() {
-        return attackDamage;
-    }
-
-    @Override
-    public String toString() {
-        return "Predator";
+    protected boolean interact(Entity target, GameMap gameMap) {
+        if (target instanceof Damageable victim) {
+            boolean isDead = victim.takeDamage(this.attackDamage);
+            if (isDead) {
+                gameMap.removeEntity(target.getCoordinates());
+                this.heal(HEAL_AMOUNT);
+                return true;
+            }
+        }
+        return false;
     }
 }

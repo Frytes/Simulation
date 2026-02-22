@@ -1,19 +1,16 @@
 package frytes.simulation.action;
 
 import frytes.simulation.entity.Coordinates;
-import frytes.simulation.entity.Entity;
-import frytes.simulation.map.Map;
+import frytes.simulation.gamemap.GameMap;
 
 import java.util.*;
 
 
 public class PathFinder {
-    public List<Coordinates> findPath(Coordinates start, Coordinates target, Map map, Class<? extends Entity> targetType) {
-
+    public List<Coordinates> find(GameMap gameMap, Coordinates start, Coordinates target) {
         PriorityQueue<Node> queue = new PriorityQueue<>();
-        HashMap<Coordinates, Coordinates> cameFrom = new HashMap<>();
-
-        HashMap<Coordinates, Integer> gCost = new HashMap<>();
+        Map<Coordinates, Coordinates> cameFrom = new HashMap<>();
+        Map<Coordinates, Integer> gCost = new HashMap<>();
 
         queue.add(new Node(start, 0));
         cameFrom.put(start, null);
@@ -21,31 +18,22 @@ public class PathFinder {
 
         while (!queue.isEmpty()) {
             Coordinates current = queue.poll().coordinates;
+
             if (current.equals(target)) {
                 break;
             }
 
-            int x = current.x();
-            int y = current.y();
-
-            List<Coordinates> potentialNeighbors = List.of(
-                    new Coordinates(x - 1, y),
-                    new Coordinates(x + 1, y),
-                    new Coordinates(x, y - 1),
-                    new Coordinates(x, y + 1)
-            );
+            List<Coordinates> potentialNeighbors = getNeighbors(current); // Я вынес это в метод для читаемости, но можно оставить как было
 
             for (Coordinates neighborCoord : potentialNeighbors) {
-                if (!Map.isValidCoordinates(neighborCoord)) continue;
+                boolean isWalkable = gameMap.isValidCoordinates(neighborCoord)
+                        && (gameMap.isEmpty(neighborCoord) || neighborCoord.equals(target));
 
-                Entity neighborEntity = map.getEntity(neighborCoord);
-
-                boolean isWalkable = (neighborEntity == null) || targetType.isInstance(neighborEntity);
-
-                if (!isWalkable) continue;
+                if (!isWalkable) {
+                    continue;
+                }
 
                 int newCost = gCost.get(current) + 1;
-
                 if (!gCost.containsKey(neighborCoord) || newCost < gCost.get(neighborCoord)) {
                     gCost.put(neighborCoord, newCost);
                     int priority = newCost + heuristic(neighborCoord, target);
@@ -60,7 +48,16 @@ public class PathFinder {
         return reconstructPath(start, target, cameFrom);
     }
 
-    private List<Coordinates> reconstructPath(Coordinates start, Coordinates target, HashMap<Coordinates, Coordinates> cameFrom) {
+    private List<Coordinates> getNeighbors(Coordinates c) {
+        return List.of(
+                new Coordinates(c.x() - 1, c.y()),
+                new Coordinates(c.x() + 1, c.y()),
+                new Coordinates(c.x(), c.y() - 1),
+                new Coordinates(c.x(), c.y() + 1)
+        );
+    }
+
+    private List<Coordinates> reconstructPath(Coordinates start, Coordinates target, Map<Coordinates, Coordinates> cameFrom) {
         List<Coordinates> path = new ArrayList<>();
         Coordinates step = target;
 

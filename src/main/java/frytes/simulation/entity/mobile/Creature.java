@@ -4,68 +4,53 @@ import frytes.simulation.action.Damageable;
 import frytes.simulation.action.PathFinder;
 import frytes.simulation.entity.Coordinates;
 import frytes.simulation.entity.Entity;
-import frytes.simulation.map.Map;
+import frytes.simulation.gamemap.GameMap;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Queue;
+import java.util.Optional;
 
 @Getter
-@Setter
 public abstract class Creature extends Entity implements Damageable {
-    Integer moveSpeed;
-    int hp;
-    Queue<Integer> turnToMove;
+    private final int moveSpeed;
+    private int hp;
+    private final Class<? extends Entity> targetType;
 
-    public Creature(Coordinates coordinates) {
+    protected Creature(Coordinates coordinates, int hp, int moveSpeed, Class<? extends Entity> targetType) {
         super(coordinates);
+        this.hp = hp;
+        this.moveSpeed = moveSpeed;
+        this.targetType = targetType;
     }
 
-    protected abstract int getAttackDamage();
+    protected abstract boolean interact(Entity target, GameMap gameMap);
 
-    protected abstract Class<? extends Entity> getTargetType();
-
-    public void makeMove(Map map) {
-        Entity entityOnMap = map.getEntity(this.getCoordinates());
+    public void makeMove(GameMap gameMap) {
+        Entity entityOnMap = gameMap.getEntity(this.getCoordinates()).orElse(null);
         if (entityOnMap != this) {
             return;
         }
-        Class<? extends Entity> targetType = getTargetType();
-        Entity target = findNearestTarget(targetType, map);
-        if (target != null) {
+
+        findNearestTarget(targetType, gameMap).ifPresent(target -> {
             PathFinder pathFinder = new PathFinder();
-            List<Coordinates> path = pathFinder.findPath(this.getCoordinates(), target.getCoordinates(), map,targetType);
-            moveAlongPath(path, map);
-        }
+            List<Coordinates> path = pathFinder.find(gameMap, this.getCoordinates(), target.getCoordinates());
+            moveAlongPath(path, gameMap);
+        });
     }
 
-    private Entity findNearestTarget(Class<? extends Entity> targetType, Map map) {
-        List<? extends Entity> targets = map.getEntitiesByType(targetType);
-
-        return targets.stream()
-                .min(Comparator.comparingInt(e ->
-                        Math.abs(this.getCoordinates().x() - e.getCoordinates().x())
-                                + Math.abs(this.getCoordinates().y() - e.getCoordinates().y())
-                ))
-                .orElse(null);
-    }
-
-
-    private void moveAlongPath(List<Coordinates> path, Map map) {
+    private void moveAlongPath(List<Coordinates> path, GameMap gameMap) {
         if (path == null || path.isEmpty()) return;
 
         for (int i = 0; i < path.size() && i < moveSpeed; i++) {
             Coordinates nextStep = path.get(i);
 
-            if (map.isEmpty(nextStep)) {
-                map.moveEntity(nextStep, this);
-            }
-            else {
-                Entity entityOnNextStep = map.getEntity(nextStep);
-                if (interact(entityOnNextStep, map)) {
-                    map.moveEntity(nextStep, this);
+            if (gameMap.isEmpty(nextStep)) {
+                moveEntity(gameMap, nextStep);
+            } else {
+                Entity entityOnNextStep = gameMap.getEntity(nextStep).orElse(null);
+                if (interact(entityOnNextStep, gameMap)) {
+                    moveEntity(gameMap, nextStep);
                 } else {
                     break;
                 }
@@ -73,27 +58,23 @@ public abstract class Creature extends Entity implements Damageable {
         }
     }
 
-    protected boolean interact(Entity target, Map map) {
-        Class<? extends Entity> myTargetType = getTargetType();
-
-        if (myTargetType.isInstance(target)) {
-            return attack(target, map);
+    private void moveEntity(GameMap gameMap, Coordinates coordinates) {
+        if (gameMap.isEmpty(coordinates)) {
+            gameMap.removeEntity(this.getCoordinates());
+            this.setCoordinates(coordinates);
+            gameMap.setEntity(coordinates, this);
+        } else {
+            throw new IllegalArgumentException("Нельзя передвинуть. Место занято другим");
         }
-        return false;
     }
 
-    protected boolean attack(Entity target, Map map) {
-        if (target instanceof Damageable victim) {
-            int damage = this.getAttackDamage();
-
-            boolean isDead = victim.takeDamage(damage);
-
-            if (isDead) {
-                map.removeEntity(target.getCoordinates());
-                this.hp += 5;
-                return true;
-            }
-        }return false;
+    private Optional<? extends Entity> findNearestTarget(Class<? extends Entity> targetType, GameMap gameMap) {
+        List<? extends Entity> targets = gameMap.getEntitiesByType(targetType);
+        return targets.stream()
+                .min(Comparator.comparingInt(e ->
+                        Math.abs(this.getCoordinates().x() - e.getCoordinates().x())
+                                + Math.abs(this.getCoordinates().y() - e.getCoordinates().y())
+                ));
     }
 
     @Override
@@ -102,5 +83,7 @@ public abstract class Creature extends Entity implements Damageable {
         return this.hp <= 0;
     }
 
-
+    protected void heal(int amount) {
+        this.hp += amount;
+    }
 }
